@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NeoBank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --success: #00b894;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --info: #0984e3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f1f2f6;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #dfe6e9;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--info));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: var(--danger);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .account-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+
+        .card-chip {
+            width: 40px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .card-number {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            word-spacing: 8px;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-name {
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .card-expiry {
+            font-size: 1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .account-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .account-info {
+            margin-bottom: 30px;
+        }
+
+        .account-number {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .account-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .balance {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn i {
+            margin-right: 8px;
+        }
+
+        .deposit-btn {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .deposit-btn:hover {
+            background-color: #00a884;
+        }
+
+        .withdraw-btn {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .withdraw-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .transaction-btn {
+            background-color: var(--info);
+            color: white;
+        }
+
+        .transaction-btn:hover {
+            background-color: #0778c7;
+        }
+
+        .transaction-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .transaction-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #dfe6e9;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-details {
+            flex: 1;
+        }
+
+        .transaction-type {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .transaction-date {
+            font-size: 0.8rem;
+            color: #636e72;
+        }
+
+        .transaction-amount {
+            font-weight: 700;
+        }
+
+        .deposit-amount {
+            color: var(--success);
+        }
+
+        .withdrawal-amount {
+            color: var(--danger);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #636e72;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #5649d1;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+
+        .toast i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-university"></i>
+                <h1>NeoBank</h1>
+            </div>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </header>
+
+        <div class="account-card">
+            <div class="card-chip">
+                <i class="fas fa-microchip"></i>
+            </div>
+            <div class="card-number">{{ account.account_number | format_card_number }}</div>
+            <div class="card-details">
+                <div class="card-name">{{ account.name | upper }}</div>
+                <div class="card-expiry">VALID THRU</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="account-section">
+                <h2 class="section-title"><i class="fas fa-wallet"></i> Account Info</h2>
+                <div class="account-info">
+                    <div class="account-number">Account: {{ account.account_number }}</div>
+                    <div class="account-name">{{ account.name }}</div>
+                    <div class="balance">${{ "%.2f"|format(account.balance) }}</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn deposit-btn" id="depositBtn">
+                        <i class="fas fa-plus-circle"></i> Deposit
+                    </button>
+                    <button class="action-btn withdraw-btn" id="withdrawBtn">
+                        <i class="fas fa-minus-circle"></i> Withdraw
+                    </button>
+                </div>
+                <button class="action-btn transaction-btn" id="transactionsBtn">
+                    <i class="fas fa-history"></i> View Transactions
+                </button>
+            </div>
+
+            <div class="transaction-section">
+                <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Recent Transactions</h2>
+                <div class="transaction-list" id="transactionList">
+                    {% for tx in transactions %}
+                    <div class="transaction-item">
+                        <div class="transaction-details">
+                            <div class="transaction-type">{{ tx.type | capitalize }}</div>
+                            <div class="transaction-date">{{ tx.timestamp | format_date }}</div>
+                        </div>
+                        <div class="transaction-amount {% if tx.type.lower() == 'deposit' %}deposit-amount{% else %}withdrawal-amount{% endif %}">
+                            {% if tx.type.lower() == 'deposit' %}+{% else %}-{% endif %}${{ "%.2f"|format(tx.amount) }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="transaction-item">
+                        <div class="transaction-details">
+                            <div class="transaction-type">No transactions yet</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div class="modal" id="depositModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-plus-circle"></i> Deposit Money</h2>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label for="depositAmount">Amount</label>
+                    <input type="number" id="depositAmount" placeholder="Enter amount to deposit" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit" class="submit-btn" id="depositSubmitBtn">
+                    <span class="spinner" id="depositSpinner"></span>
+                    Deposit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div class="modal" id="withdrawModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-minus-circle"></i> Withdraw Money</h2>
+            <form id="withdrawForm">
+                <div class="form-group">
+                    <label for="withdrawAmount">Amount</label>
+                    <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit" class="submit-btn" id="withdrawSubmitBtn">
+                    <span class="spinner" id="withdrawSpinner"></span>
+                    Withdraw
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operation successful</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const logoutBtn = document.getElementById('logoutBtn');
+        const depositBtn = document.getElementById('depositBtn');
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const depositModal = document.getElementById('depositModal');
+        const withdrawModal = document.getElementById('withdrawModal');
+        const closeModals = document.querySelectorAll('.close-modal');
+        const depositForm = document.getElementById('depositForm');
+        const withdrawForm = document.getElementById('withdrawForm');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const accountBalance = document.querySelector('.balance');
+
+        // Helper functions
+        function showToast(message, type = 'success') {
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            
+            const icon = toast.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function toggleLoading(button, isLoading) {
+            const spinner = button.querySelector('.spinner');
+            if (isLoading) {
+                button.disabled = true;
+                spinner.style.display = 'inline-block';
+            } else {
+                button.disabled = false;
+                spinner.style.display = 'none';
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(amount);
+        }
+
+        // Modal functions
+        function openModal(modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event listeners
+        logoutBtn.addEventListener('click', () => {
+            window.location.href = '/logout';
+        });
+
+        depositBtn.addEventListener('click', () => openModal(depositModal));
+        withdrawBtn.addEventListener('click', () => openModal(withdrawModal));
+
+        closeModals.forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                closeModal(modal);
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                closeModal(e.target);
+            }
+        });
+
+        // Deposit form submission
+        depositForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const submitBtn = document.getElementById('depositSubmitBtn');
+
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            toggleLoading(submitBtn, true);
+
+            try {
+                const response = await fetch(`/api/accounts/{{ account.id }}/deposit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update balance display
+                    const currentBalance = parseFloat(accountBalance.textContent.replace('$', ''));
+                    const newBalance = currentBalance + amount;
+                    accountBalance.textContent = formatCurrency(newBalance);
+                    
+                    // Close modal and reset form
+                    closeModal(depositModal);
+                    depositForm.reset();
+                    
+                    showToast(`Deposit of ${formatCurrency(amount)} successful!`);
+                    
+                    // Reload page to update transactions
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Deposit failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error. Please try again.', 'error');
+                console.error('Deposit error:', error);
+            } finally {
+                toggleLoading(submitBtn, false);
+            }
+        });
+
+        // Withdraw form submission
+        withdrawForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const submitBtn = document.getElementById('withdrawSubmitBtn');
+
+            if (isNaN(amount) || amount <= 0) {
+                showToast('Please enter a valid amount', 'error');
+                return;
+            }
+
+            const currentBalance = parseFloat(accountBalance.textContent.replace('$', ''));
+            if (amount > currentBalance) {
+                showToast('Insufficient funds', 'error');
+                return;
+            }
+
+            toggleLoading(submitBtn, true);
+
+            try {
+                const response = await fetch(`/api/accounts/{{ account.id }}/withdraw`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update balance display
+                    const newBalance = currentBalance - amount;
+                    accountBalance.textContent = formatCurrency(newBalance);
+                    
+                    // Close modal and reset form
+                    closeModal(withdrawModal);
+                    withdrawForm.reset();
+                    
+                    showToast(`Withdrawal of ${formatCurrency(amount)} successful!`);
+                    
+                    // Reload page to update transactions
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Withdrawal failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error. Please try again.', 'error');
+                console.error('Withdrawal error:', error);
+            } finally {
+                toggleLoading(submitBtn, false);
+            }
+        });
+    </script>
+</body>
+</html>
